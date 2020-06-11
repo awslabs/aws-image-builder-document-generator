@@ -1,0 +1,96 @@
+name: RunConfig_UpdateWindows
+description: 'This document will install all available Windows updates and execute a config script.  It will then validate the changes before an AMI is created.  Then after AMI creation, it will test all the changes.'
+schemaVersion: 1.0
+phases:
+  -
+    name: build
+    steps:
+      -
+        name: DownloadConfigScript
+        action: S3Download
+        timeoutSeconds: 60
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          -
+            source: 's3://customer-bucket/config.ps1'
+            destination: 'C:\Temp\config.ps1'
+      -
+        name: RunConfigScript
+        action: ExecutePowerShell
+        timeoutSeconds: 120
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          commands:
+            - '{{build.DownloadConfigScript.inputs[0].destination}}'
+      -
+        name: Cleanup
+        action: ExecutePowerShell
+        timeoutSeconds: 120
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          commands:
+            - 'Remove-Item {{build.DownloadConfigScript.inputs[0].destination}}'
+      -
+        name: RebootAfterConfigApplied
+        action: Reboot
+        inputs:
+          delaySeconds: 60
+      -
+        name: InstallWindowsUpdates
+        action: UpdateOS
+  -
+    name: validate
+    steps:
+      -
+        name: DownloadTestConfigScript
+        action: S3Download
+        timeoutSeconds: 60
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          -
+            source: 's3://customer-bucket/testConfig.ps1'
+            destination: 'C:\Temp\testConfig.ps1'
+      -
+        name: ValidateConfigScript
+        action: ExecutePowerShell
+        timeoutSeconds: 120
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          commands:
+            - '{{validate.DownloadTestConfigScript.inputs[0].destination}}'
+      -
+        name: Cleanup
+        action: ExecutePowerShell
+        timeoutSeconds: 120
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          commands:
+            - 'Remove-Item {{validate.DownloadTestConfigScript.inputs[0].destination}}'
+  -
+    name: test
+    steps:
+      -
+        name: DownloadTestConfigScript
+        action: S3Download
+        timeoutSeconds: 60
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          -
+            source: 's3://customer-bucket/testConfig.ps1'
+            destination: 'C:\Temp\testConfig.ps1'
+      -
+        name: ValidateConfigScript
+        action: ExecutePowerShell
+        timeoutSeconds: 120
+        onFailure: Abort
+        maxAttempts: 3
+        inputs:
+          commands:
+            - '{{test.DownloadTestConfigScript.inputs[0].destination}}'

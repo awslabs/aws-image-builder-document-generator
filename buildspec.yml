@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - . .\codebuild\install.ps1
+      - . .\codebuild\set_credentials.ps1
+      - . .\codebuild\install_toe.ps1
+  build:
+    commands:
+      - Get-Location | select -ExpandProperty path
+      - mkdir tests/reports
+      #Pester 4
+      - invoke-pester -EnableExit -OutputFormat JUnitXml -OutputFile ./tests/reports/pester.xml
+      #Pester 5 JUnit output is missing (Pending v5.1 release)
+      # - Invoke-Pester -Output 'Detailed' -CI
+      - "'$? is {0}, and $LastExitCode is {1}, CODEBUILD_BUILD_SUCCEEDING is {2}' -f $?, $LastExitCode, $env:CODEBUILD_BUILD_SUCCEEDING"
+reports:
+  pester-tests:
+    files:
+      - tests/reports/pester.xml
+    discard-paths: yes
+    file-format: JunitXml

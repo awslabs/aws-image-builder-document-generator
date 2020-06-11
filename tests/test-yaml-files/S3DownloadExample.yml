@@ -1,0 +1,5 @@
+name: DownloadMyFile
+action: S3Download
+inputs:
+    - source: s3://mybucket/path/to/package.zip
+      destination: C:\myfolder\package.zip

@@ -1,0 +1,7 @@
+name: MyS3UploadFile
+action: S3Upload
+onFailure: Abort
+maxAttempts: 3
+inputs:
+    - source: C:\myfolder\package.zip
+      destination: s3://mybucket/path/to/package.zip

@@ -1,0 +1,6 @@
+name: RebootStep
+action: Reboot
+onFailure: Abort
+maxAttempts: 2
+inputs:
+    delaySeconds: 60

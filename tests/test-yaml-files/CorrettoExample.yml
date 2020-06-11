@@ -1,0 +1,18 @@
+name: "Amazon Corretto 11"
+description: "Installs Amazon Corretto 11 for Windows in accordance with the Amazon Corretto 11 User Guide at https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/windows-7-install.html."
+schemaVersion: "1.0"
+phases:
+  - name: build
+    steps:
+      - name: Installer
+        action: ExecutePowerShell
+        timeoutSeconds: 15
+        inputs:
+          commands:
+            - Write-Host 'amazon-corretto-11-x64-windows-jdk.msi'
+      - name: InstallerUri
+        action: ExecutePowerShell
+        timeoutSeconds: 15
+        inputs:
+          commands:
+            - Write-Host 'https://corretto.aws/downloads/latest/{{build.Installer.outputs.stdout}}'

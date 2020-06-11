@@ -1,0 +1,6 @@
+name: "InstallMySoftware"
+action: ExecutePowerShell
+inputs:
+  commands: 
+      - Set-SomeConfiguration -Value 10
+      - Write-Host "Successfully set the configuration."

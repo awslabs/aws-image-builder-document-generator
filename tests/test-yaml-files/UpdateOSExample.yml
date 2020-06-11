@@ -1,0 +1,7 @@
+name: UpdateMyLinux
+action: UpdateOS
+onFailure: Abort
+maxAttempts: 3
+inputs:
+    exclude:
+        - ec2-hibinit-agent

@@ -1,0 +1,8 @@
+name: MyS3UploadFolder
+action: S3Upload
+onFailure: Abort
+maxAttempts: 3
+inputs:
+    - source: C:\myfolder\*
+      destination: s3://mybucket/path/to/
+      recurse: true

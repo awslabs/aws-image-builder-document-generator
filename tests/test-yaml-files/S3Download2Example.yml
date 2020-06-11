@@ -1,0 +1,6 @@
+name: MyS3DownloadKeyprefix
+action: S3Download
+maxAttempts: 3
+inputs:
+    - source: s3://mybucket/path/to/*
+      destination: C:\myfolder\

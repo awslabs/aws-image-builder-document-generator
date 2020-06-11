@@ -1,0 +1,7 @@
+name: "InstallDotnet"
+action: ExecuteBinary
+inputs:
+  path: C:\PathTo\dotnet_installer.exe
+  arguments:
+    - /qb
+    - /norestart

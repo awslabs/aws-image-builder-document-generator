@@ -1,0 +1,12 @@
+name: SetRegistryKeyValues
+action: SetRegistry
+maxAttempts: 3
+inputs:
+    - path: HKLM:\SOFTWARE\MySoftWare
+      name: MyName
+      value: FirstVersionSoftware
+      type: SZ
+    - path: HKEY_CURRENT_USER\Software\Test
+      name: Version
+      value: 1.1
+      type: DWORD
